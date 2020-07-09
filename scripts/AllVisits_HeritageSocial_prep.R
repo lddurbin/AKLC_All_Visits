@@ -1,9 +1,10 @@
-#get the heritage social media data for FY2019 and FY2020
-HeritageSocial2020 <- read_excel(AllVisits.files.local["HeritageSocial2020"]) %>% remove_empty()
-HeritageSocial2019 <- read_excel(AllVisits.files.local["HeritageSocial2019"])
+# Load and clean the heritage social media data for FY2019 and FY2020
+HeritageSocial2020 <- read_excel(AllVisits.files.local["HeritageSocial2020"]) %>%
+  remove_empty() %>% 
+  select(metric_name = 1, everything(), -length(.)) %>% 
+  pivot_longer(-1, names_to = "date", names_transform = list(date = as.integer), values_to = "Metric") %>% 
+  mutate(Month = getMonth(excel_numeric_to_date(date)), Year = getYear(excel_numeric_to_date(date))) %>% 
+  filter(str_detect(metric_name, "Facebook engagement")) %>% 
+  select(Month, Year, Metric)
 
-#Clean Heritage social media data
-HeritageSocial.reshaped <- melt(HeritageSocial2020[1:(length(HeritageSocial2020)-1)])
-HeritageSocial.reshaped$Month <- getMonth(excel_numeric_to_date(as.numeric(as.character.factor(HeritageSocial.reshaped$variable))))
-HeritageSocial.reshaped$Year <- getYear(excel_numeric_to_date(as.numeric(as.character.factor(HeritageSocial.reshaped$variable))))
-HeritageSocial.metric <- HeritageSocial.reshaped %>% dplyr::filter(str_detect(...1, "Facebook engagement")) %>% dplyr::select(Metric=value, Month, Year)
+HeritageSocial2019 <- read_excel(AllVisits.files.local["HeritageSocial2019"])
