@@ -1,8 +1,9 @@
 metrics <- c("total social post engagement", "blog page views", "blog page views (libraries + heritage et al)", "youtube views", "sound cloud podcast listens")
 
-# Prepare the regional social data
+# Prepare regional social data, irrespective of the FY
 RegionalSocialPrep <- function(x) {
-  x %>% pivot_longer(2:(length(.)-1), values_to = "Metric", names_transform = list(name = as.integer)) %>% 
+  x %>% read_excel(range = cell_cols("A:N")) %>% 
+    pivot_longer(2:(length(.)-1), values_to = "Metric", names_transform = list(name = as.integer)) %>% 
     filter(str_to_lower(...1) %in% metrics & (!is.na(Metric) & Metric > 0)) %>% 
     mutate(Month = getMonth(excel_numeric_to_date(name)), Year = getYear(excel_numeric_to_date(name)), Metric_source = case_when(
       str_detect(str_to_lower(...1), "total social post engagement") ~ "Regional social media Facebook, Twitter, Instagram",
@@ -13,15 +14,9 @@ RegionalSocialPrep <- function(x) {
     select(-c(1:3))
 }
 
-# Load and clean the FY19 regional social data
-RegionalSocial2019 <- read_excel(AllVisits.files.local["RegionalSocial2019"]) %>% 
-  RegionalSocialPrep %>% 
-  mutate(Data_source = AllVisits.files.local["RegionalSocial2019"])
+# List all regional social data files
+files <- AllVisits.files.local[grep("RegionalSocial*", names(AllVisits.files.local))]
 
-# Load and clean the FY19 regional social data
-RegionalSocial2020 <- read_excel(AllVisits.files.local["RegionalSocial2020"]) %>% 
-  select(-last_col()) %>% 
-  RegionalSocialPrep %>% 
-  mutate(Data_source = AllVisits.files.local["RegionalSocial2020"])
-
-RegionalSocial <- bind_rows(RegionalSocial2019, RegionalSocial2020)
+# Load and clean all regional social data files
+RegionalSocial <- lapply(files, RegionalSocialPrep) %>% 
+  bind_rows(.id = "Data_source")
