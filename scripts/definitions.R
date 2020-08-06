@@ -27,16 +27,18 @@ DX$Metric_group <- case_when(
   DX$Metric_type == "Door counts" ~ "In Library facilities visits"
 )
 
-#HERTIAGE2020
-HeritageSocial2020$Metric_group <- "Online visits/interactions"
-HeritageSocial2020$Metric_source <- "Research and Heritage (Facebook)"
-HeritageSocial2020$Data_source <- AllVisits.files.local["HeritageSocial2020"]
-HeritageSocial2020$Metric_type <- "Engagement"
-
-#HERITAGE2019
-HeritageSocial2019$Metric_group <- "Online visits/interactions"
-HeritageSocial2019$Metric_type <- "Engagement"
-HeritageSocial2019$Metric_source <- "Research and Heritage (Facebook)"
+#HERTIAGE2021
+HeritageSocial <- HeritageSocial %>%
+  mutate(
+    Metric_group = "Online visits/interactions",
+    Metric_source = "Research and Heritage (Facebook)",
+    Metric_type = "Engagement",
+    Data_source = case_when(
+      Year == "2019" ~ AllVisits.files.local["HistoricHeritageSocial"],
+      Year == "2020" ~ AllVisits.files.local["HeritageSocial2020"],
+      Year == "2021" ~ AllVisits.files.local["HeritageSocial2021"]
+      )
+    )
 
 #KURA
 Kura$Data_source <- "//aklc.govt.nz/Shared/COO/Libraries and Information/Content and Access/Team Documents/Insights and Analysis/Libraries Metrics/Other metrics/ALL visits/Kura"
