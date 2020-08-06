@@ -43,7 +43,7 @@ source("scripts/definitions.R")
 # *****************************************************************************
 # Finishing touches and export ---- 
 
-# Merge all data frames together, add various date fields
+# Merge all data frames together, add various date fields, insert rows for missing data
 AllVisits <- rbind(Kura, HeritageImages, ManuscriptsOnline, Boopsie2019, Boopsie2020, RegionalSocial, Overdrive, HeritageSocial, Subscriptions, DX, AandR_enquiries, AandR_sessions, LibraryConnect) %>% 
   mutate(
     Month_num = match(.$Month, month.abb),
@@ -52,7 +52,8 @@ AllVisits <- rbind(Kura, HeritageImages, ManuscriptsOnline, Boopsie2019, Boopsie
     Month_number = case_when(Month_num > 6 ~ (Month_num)-6, Month_num < 7 ~ (Month_num)+6)
     ) %>% 
   filter(Date != Sys.Date() & FY %in% c("2019", "2020", "2021")) %>% 
-  select(-Month_num)
+  select(-Month_num) %>% 
+  complete(Date, nesting(Metric_type, Metric_source, Metric_group), fill = list(Metric = 0))
 
 #Calculate the change (# and %) compared to the same point the previous FY
 AllVisits <- arrange(AllVisits, Metric_source, Month_number, FY) %>%
@@ -80,6 +81,9 @@ AllVisits <- arrange(AllVisits, Metric_source, Month_number, FY) %>%
   dplyr::mutate(Change_FYTD_num = FYTD - lag(FYTD, default = first(FYTD)),
                 Change_FYTD_perc = Change_FYTD_num/lag(FYTD, default = first(FYTD))) %>% 
   ungroup()
+
+# Change infinite values to zero
+AllVisits[AllVisits == Inf] <- 0
 
 #Archive the old data output and export the new data frame to a .csv file
 file.rename("data/processed/AllVisits.csv", paste("data/processed/archived/AllVisits_", as.Date(file.info("data/processed/AllVisits.csv")$ctime), ".csv", sep=""))
