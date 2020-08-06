@@ -3,6 +3,7 @@
 
 # Load libraries
 #install.packages("needs")
+library(needs)
 library("tidyverse")
 library("readxl")
 library("janitor")
@@ -49,7 +50,7 @@ AllVisits <- rbind(Kura, HeritageImages, ManuscriptsOnline, Boopsie2019, Boopsie
     Date = as.Date(paste(Month, "01", Year, sep="/"), format="%b/%d/%Y"),
     FY = as.character(get_fy(Date)),
     Month_number = case_when(Month_num > 6 ~ (Month_num)-6, Month_num < 7 ~ (Month_num)+6)
-  ) %>% 
+    ) %>% 
   filter(Date != Sys.Date() & FY %in% c("2019", "2020", "2021")) %>% 
   select(-Month_num)
 
@@ -57,24 +58,28 @@ AllVisits <- rbind(Kura, HeritageImages, ManuscriptsOnline, Boopsie2019, Boopsie
 AllVisits <- arrange(AllVisits, Metric_source, Month_number, FY) %>%
   group_by(Metric_source, Month) %>%
   dplyr::mutate(Change_num = Metric - lag(Metric, default = first(Metric)),
-                Change_perc = Change_num/lag(Metric, default = first(Metric)), .groups = "drop")
+                Change_perc = Change_num/lag(Metric, default = first(Metric))) %>% 
+  ungroup()
 
 #Calculate the change (# and %) compared to the previous month
 AllVisits <- arrange(AllVisits, Metric_source, FY, Month_number) %>%
   group_by(Metric_source) %>%
   dplyr::mutate(Change_month_num = Metric - lag(Metric, default = first(Metric)),
-                Change_month_perc = Change_month_num/lag(Metric, default = first(Metric)), .groups = "drop")
+                Change_month_perc = Change_month_num/lag(Metric, default = first(Metric))) %>% 
+  ungroup()
 
 #Calculate the FYTD
 AllVisits <- arrange(AllVisits, Metric_source, FY, Month_number) %>%
   group_by(Metric_source, FY) %>%
-  dplyr::mutate(FYTD = cumsum(Metric), .groups = "drop")
+  dplyr::mutate(FYTD = cumsum(Metric)) %>% 
+  ungroup()
 
 #Calculate the change (# and %) compared to the previous FYTD
 AllVisits <- arrange(AllVisits, Metric_source, Month_number, FY) %>%
   group_by(Metric_source, Month) %>%
   dplyr::mutate(Change_FYTD_num = FYTD - lag(FYTD, default = first(FYTD)),
-                Change_FYTD_perc = Change_FYTD_num/lag(FYTD, default = first(FYTD)), .groups = "drop")
+                Change_FYTD_perc = Change_FYTD_num/lag(FYTD, default = first(FYTD))) %>% 
+  ungroup()
 
 #Archive the old data output and export the new data frame to a .csv file
 file.rename("data/processed/AllVisits.csv", paste("data/processed/archived/AllVisits_", as.Date(file.info("data/processed/AllVisits.csv")$ctime), ".csv", sep=""))
