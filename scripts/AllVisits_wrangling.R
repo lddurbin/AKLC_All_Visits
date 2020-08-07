@@ -3,7 +3,7 @@
 
 # Load libraries
 #install.packages("needs")
-library(needs)
+# library(needs)
 library("tidyverse")
 library("readxl")
 library("janitor")
@@ -43,17 +43,18 @@ source("scripts/definitions.R")
 # *****************************************************************************
 # Finishing touches and export ---- 
 
-# Merge all data frames together, add various date fields, insert rows for missing data
+# Merge all data frames together, add various date fields, filter to relevant FYs, insert rows for missing data
 AllVisits <- rbind(Kura, HeritageImages, ManuscriptsOnline, Boopsie2019, Boopsie2020, RegionalSocial, Overdrive, HeritageSocial, Subscriptions, DX, AandR_enquiries, AandR_sessions, LibraryConnect) %>% 
-  mutate(
-    Month_num = match(.$Month, month.abb),
-    Date = as.Date(paste(Month, "01", Year, sep="/"), format="%b/%d/%Y"),
-    FY = as.character(get_fy(Date)),
-    Month_number = case_when(Month_num > 6 ~ (Month_num)-6, Month_num < 7 ~ (Month_num)+6)
-    ) %>% 
-  filter(Date != Sys.Date() & FY %in% c("2019", "2020", "2021")) %>% 
+  mutate(Date = as.Date(paste(Month, "01", Year, sep="/"), format="%b/%d/%Y")) %>% 
+  complete(Date, nesting(Metric_type, Metric_source, Metric_group), fill = list(Metric = 0)) %>% 
+  mutate(Month = case_when(is.na(Month) ~ format(Date, "%b"), !is.na(Month) ~ Month),
+         Year = case_when(is.na(Year) ~ format(Date, "%Y"), !is.na(Year) ~ Year),
+         FY = as.character(get_fy(Date)),
+         Month_num = match(Month, month.abb),
+         Month_number = case_when(Month_num > 6 ~ (Month_num)-6, Month_num < 7 ~ (Month_num)+6)
+         ) %>% 
   select(-Month_num) %>% 
-  complete(Date, nesting(Metric_type, Metric_source, Metric_group), fill = list(Metric = 0))
+  filter(Date != as.Date(format(Sys.Date(), paste("%Y-%m", "01", sep="-"))) & FY %in% c("2019", "2020", "2021"))
 
 #Calculate the change (# and %) compared to the same point the previous FY
 AllVisits <- arrange(AllVisits, Metric_source, Month_number, FY) %>%
