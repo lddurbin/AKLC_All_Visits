@@ -4,6 +4,7 @@
 # But not these files...
 !.gitignore
 !AllVisits.Rproj
+!scripts/AdHocAnalysis.R
 !scripts/AllVisits_AandR_prep.R
 !scripts/AllVisits_Boopsie_prep.R
 !scripts/AllVisits_DX_prep.R
