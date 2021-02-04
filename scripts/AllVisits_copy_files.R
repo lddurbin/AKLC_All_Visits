@@ -6,7 +6,9 @@ FileMissing <- matches(FALSE, file.exists(AllVisits.files), all.y=FALSE)
     unlink("data/raw/archived/*") #clear the archive
     file.copy(Sys.glob("data/raw/*"), "data/raw/archived") #copy existing files into the archive
     unlink("data/raw/*") #clear the files we just copied
-    file.copy(AllVisits.files, "data/raw") #copy the latest files in
+    data_dirs <- paste0("data/raw/", str_remove(names(AllVisits.files), "\\..*")) %>% unique()
+    map(data_dirs, dir.create) #create directories to hold new files
+    map2(AllVisits.files, names(AllVisits.files), copyFile) #copy the files into their directories
   } else { #list the missing file paths in a .txt file for checking, flash a message to the user
     writeLines(AllVisits.files[unlist(FileMissing["y"])], paste("data/missing_files_",Sys.Date(),  ".txt", sep=""))
     winDialog("ok", "Missing data file(s). Please check missing_files.txt for details.")

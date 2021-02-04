@@ -12,3 +12,7 @@ getYear <- function(x) {
 getFileLocations <- function(x) {
   stack(AllVisits.files.local)[grep(paste("^", x, sep=""), stack(AllVisits.files.local)$ind), ]$values
 }
+
+copyFile <- function(file, directory) {
+  file.copy(file, paste0("data/raw/", str_remove(directory, "\\..*")))
+}
