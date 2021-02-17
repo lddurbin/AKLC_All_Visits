@@ -1,6 +1,6 @@
 # Prepare Google Analytics data
 wrangle_data <- function(x) {
-  sapply(getFileLocations(x), read_excel, sheet=2, simplify=FALSE) %>%
+  sapply(list.files(paste0("data/raw/", x), full.names = TRUE), read_excel, sheet=2, simplify=FALSE) %>%
     bind_rows() %>% 
     clean_names() %>% 
     mutate(Month = getMonth(day_index), Year = getYear(day_index), Metric_type = "Sessions") %>% 

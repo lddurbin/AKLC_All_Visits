@@ -8,13 +8,9 @@ library("janitor")
 library("lubridate")
 library("busdater")
 library("grr")
-#needs(tidyverse, readxl, janitor, lubridate, busdater, grr)
 
 # Commonly-used functions
 source("scripts/functions.R")
-
-# List files
-source("scripts/listFiles.R")
 
 # Refresh local copy of files, archive existing set
 source("scripts/AllVisits_copy_files.R")
@@ -25,12 +21,23 @@ source("scripts/AllVisits_copy_files.R")
 # *****************************************************************************
 # Load and prep data ---- 
 
-# Point to raw data files in project folder
-AllVisits.files.local <- gsub("^(.*[/])", "data/raw/", AllVisits.files)
+source("scripts/AllVisits_AandR_prep.R")
 
-# Run the data prep scripts
-prep.files = list.files("scripts/", pattern = "\\_prep.R$")
-sapply(paste("scripts", prep.files, sep="/"), source, simplify = F) %>% invisible()
+source("scripts/AllVisits_Boopsie_prep.R")
+
+source("scripts/AllVisits_DX_prep.R")
+
+source("scripts/AllVisits_HeritageSocial_prep.R")
+
+source("scripts/AllVisits_Kura_ManuscriptsOnline_HeritageImages_prep.R")
+
+source("scripts/AllVisits_LibraryConnect_prep.R")
+
+source("scripts/AllVisits_Overdrive_prep.R")
+
+source("scripts/AllVisits_RegionalSocial_prep.R")
+
+source("scripts/AllVisits_SubscriptionDatabases_prep.R")
 
 #assign labels to metrics
 source("scripts/definitions.R")

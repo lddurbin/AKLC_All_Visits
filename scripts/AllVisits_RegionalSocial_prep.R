@@ -15,7 +15,7 @@ RegionalSocialPrep <- function(x) {
 }
 
 # List all regional social data files
-files <- AllVisits.files.local[grep("RegionalSocial*", names(AllVisits.files.local))]
+files <- list.files(c("data/raw/RegionalSocial2019", "data/raw/RegionalSocial2020", "data/raw/RegionalSocial2021"), full.names = TRUE)
 
 # Load and clean all regional social data files
 RegionalSocial <- lapply(files, RegionalSocialPrep) %>% 

@@ -10,7 +10,7 @@ AandR_sessions$Metric_group <- "Online visits/interactions"
 #BOOPSIE2019
 Boopsie2019$Metric_source <- "Boopsie"
 Boopsie2019$Metric_type <- "Daily unique users"
-Boopsie2019$Data_source <- AllVisits.files.local["Boopsie2019"]
+Boopsie2019$Data_source <- list.files("data/raw/Boopsie2019", full.names = TRUE)
 Boopsie2019$Metric_group <- "Online visits/interactions"
 
 #BOOPSIE2020
@@ -20,7 +20,7 @@ Boopsie2020$Metric_type <- "Daily unique users"
 Boopsie2020$Metric_group <- "Online visits/interactions"
 
 #DX
-DX$Data_source <- AllVisits.files["DX"]
+DX$Data_source <- list.files("data/raw/DX", full.names = TRUE)
 DX$Metric_group <- case_when(
   DX$Metric_type == "Participation" ~ "Outreach participation",
   DX$Metric_type == "Sessions" ~ "Online visits/interactions",
@@ -34,9 +34,9 @@ HeritageSocial <- HeritageSocial %>%
     Metric_source = "Research and Heritage (Facebook)",
     Metric_type = "Engagement",
     Data_source = case_when(
-      Year == "2019" ~ AllVisits.files.local["HistoricHeritageSocial"],
-      Year == "2020" ~ AllVisits.files.local["HeritageSocial2020"],
-      Year == "2021" ~ AllVisits.files.local["HeritageSocial2021"]
+      Year == "2019" ~ list.files("data/raw/HistoricHeritageSocial", full.names = TRUE),
+      Year == "2020" ~ list.files("data/raw/HeritageSocial2020", full.names = TRUE),
+      Year == "2021" ~ list.files("data/raw/HeritageSocial2021", full.names = TRUE)
       )
     )
 
@@ -63,7 +63,7 @@ LibraryConnect$Metric_group <- "Phone and email enquiries"
 
 #OVERDRIVE
 Overdrive$Metric_source <- "Overdrive"
-Overdrive$Data_source <- AllVisits.files.local["Overdrive"]
+Overdrive$Data_source <- list.files("data/raw/Overdrive", full.names = TRUE)
 Overdrive$Metric_type <- "Active visits"
 Overdrive$Metric_group <- "Online visits/interactions"
 
@@ -78,6 +78,6 @@ RegionalSocial$Metric_group <- "Online visits/interactions"
 
 #SUBSCRIPTION DATABASES
 Subscriptions$Metric_source <- "Subscription databases"
-Subscriptions$Data_source <- AllVisits.files.local["Subscriptions"]
+Subscriptions$Data_source <- list.files("data/raw/Subscriptions", full.names = TRUE)
 Subscriptions$Metric_type <- "Sessions"
 Subscriptions$Metric_group <- "Online visits/interactions"

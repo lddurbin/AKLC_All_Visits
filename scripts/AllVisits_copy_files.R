@@ -1,3 +1,6 @@
+# List files
+source("scripts/listFiles.R")
+
 #check that all files exist (get the AllVisits.files index of those that don't)
 FileMissing <- matches(FALSE, file.exists(AllVisits.files), all.y=FALSE)
 

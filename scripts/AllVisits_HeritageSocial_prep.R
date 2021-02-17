@@ -9,15 +9,12 @@ HeritageSocialPrep <- function(x) {
 }
 
 # Load the FY19 regional social data file
-HeritageSocial_historic <- AllVisits.files.local["HistoricHeritageSocial"] %>%
+HeritageSocial_historic <- list.files("data/raw/HistoricHeritageSocial", full.names = TRUE) %>%
   read_excel(col_type = c("text", "text", "numeric")) %>% 
-  mutate(Data_source = AllVisits.files.local["HistoricHeritageSocial"])
-
-# List all post-FY19 Heritage social data files
-files <- AllVisits.files.local[grep("HeritageSocial", substr(names(AllVisits.files.local), 1, 14))]
+  mutate(Data_source = list.files("data/raw/HistoricHeritageSocial"))
 
 # Load and clean all post-FY19 regional social data files
-HeritageSocial_recent <- lapply(files, HeritageSocialPrep) %>% bind_rows()
+HeritageSocial_recent <- lapply(list.files(c("data/raw/HeritageSocial2020", "data/raw/HeritageSocial2021"), full.names = TRUE), HeritageSocialPrep) %>% bind_rows()
 
 # Combine the FY19 and post-FY19 data
 HeritageSocial <- bind_rows(HeritageSocial_recent, HeritageSocial_historic)

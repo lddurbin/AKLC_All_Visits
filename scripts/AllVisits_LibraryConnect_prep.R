@@ -1,5 +1,5 @@
-old_system_data <- getFileLocations("LibraryConnect") %>% as_tibble() %>% filter(str_sub(value, 10, 24) == "Libraries Calls") %>% pull()
-new_system_data <- getFileLocations("LibraryConnect") %>% as_tibble() %>% filter(str_sub(value, 10, 24) != "Libraries Calls") %>% pull()
+old_system_data <- list.files("data/raw/LibraryConnect", full.names = TRUE) %>% as_tibble() %>% filter(str_sub(value, 25, 39) == "Libraries Calls") %>% pull()
+new_system_data <- list.files("data/raw/LibraryConnect", full.names = TRUE) %>% as_tibble() %>% filter(str_sub(value, 25, 39) != "Libraries Calls") %>% pull()
 
 # Load and clean the LibraryConnect data
 prep_data <- function(x, skip_rows) {
