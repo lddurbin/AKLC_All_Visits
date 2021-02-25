@@ -44,6 +44,28 @@ source("scripts/AllVisits_SubscriptionDatabases_prep.R")
 
 # *****************************************************************************
 
+bind_rows(
+  AandR_enquiries,
+  AandR_sessions,
+  Boopsie,
+  community_outreach,
+  HeritageSocial,
+  HeritageImages,
+  Kura,
+  LibraryConnect,
+  ManuscriptsOnline,
+  mobile_outreach,
+  Overdrive,
+  RegionalBlog,
+  RegionalFacebook,
+  RegionalInstagram,
+  RegionalTwitter,
+  RegionalSoundCloud,
+  RegionalYouTube,
+  research_outreach,
+  Subscriptions,
+  .id = "id") %>% View()
+
 
 # *****************************************************************************
 # Finishing touches and export ---- 
