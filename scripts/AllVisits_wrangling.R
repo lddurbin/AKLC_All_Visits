@@ -40,7 +40,7 @@ source("scripts/AllVisits_RegionalSocial_prep.R")
 source("scripts/AllVisits_SubscriptionDatabases_prep.R")
 
 #assign labels to metrics
-source("scripts/definitions.R")
+#source("scripts/definitions.R")
 
 # *****************************************************************************
 

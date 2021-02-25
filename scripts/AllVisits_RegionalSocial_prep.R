@@ -1,17 +1,19 @@
-metrics <- c("total social post engagement", "blog page views", "blog page views (libraries + heritage et al)", "youtube views", "sound cloud podcast listens")
+metrics <- c("engagement \\(|Sound Cloud podcast listens|YouTube views|page views")
 
 # Prepare regional social data, irrespective of the FY
 RegionalSocialPrep <- function(x) {
-  x %>% read_excel(range = cell_cols("A:N")) %>% 
-    pivot_longer(2:(length(.)-1), values_to = "Metric", names_transform = list(name = as.integer)) %>% 
-    filter(str_to_lower(...1) %in% metrics & (!is.na(Metric) & Metric > 0)) %>% 
-    mutate(Month = getMonth(excel_numeric_to_date(name)), Year = getYear(excel_numeric_to_date(name)), Data_source = x, Metric_source = case_when(
-      str_detect(str_to_lower(...1), "total social post engagement") ~ "Regional social media Facebook, Twitter, Instagram",
-      str_detect(str_to_lower(...1), "blog page views") ~ "Regional social media blog page",
-      str_detect(str_to_lower(...1), "youtube views") ~ "Regional social media YouTube",
-      str_detect(str_to_lower(...1), "sound cloud podcast listens") ~ "Regional social media Sound Cloud podcast"
-    )) %>% 
-    select(-c(1:3))
+  x %>% read_excel(range = cell_cols("A:N")) %>%
+    select(1:Total) %>% 
+    pivot_longer(2:(length(.)-1), values_to = "Metric", names_transform = list(name = as.integer)) %>%
+    filter(str_detect(...1, metrics) & (!is.na(Metric) & Metric > 0)) %>%
+    mutate(Month = getMonth(excel_numeric_to_date(name)), Year = getYear(excel_numeric_to_date(name))) %>% 
+    select(platform = 1, 4, 5, 6)
+}
+
+# filter the regional social data based on a platform of choice
+assign_variable <- function(platform_pattern) {
+  RegionalSocial %>% filter(str_detect(str_to_lower(platform), platform_pattern)) %>% 
+    select(-1)
 }
 
 # List all regional social data files
@@ -20,3 +22,11 @@ files <- list.files(c("data/raw/RegionalSocial2019", "data/raw/RegionalSocial202
 # Load and clean all regional social data files
 RegionalSocial <- lapply(files, RegionalSocialPrep) %>% 
   bind_rows()
+
+# Assign each regional social media platform to its own variable
+RegionalBlog <- assign_variable("blog page views")
+RegionalFacebook <- assign_variable("facebook")
+RegionalTwitter <- assign_variable("twitter")
+RegionalInstagram <- assign_variable("instagram")
+RegionalSoundCloud <- assign_variable("sound cloud")
+RegionalYouTube <- assign_variable("youtube")

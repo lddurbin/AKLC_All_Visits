@@ -9,7 +9,8 @@ prep_data <- function(x, skip_rows) {
     slice(1:n()-1) %>% 
     mutate(date = convert_to_date(date), Month = month(date, label = TRUE, abbr = TRUE), Year = year(date)) %>% 
     group_by(Month, Year) %>% 
-    summarise(Metric = sum(Metric), .groups = "drop")
+    summarise(Metric = sum(Metric), .groups = "drop") %>% 
+    mutate(across(c(1:2), as.character))
 }
 
 LibrariesConnect_old <- map(old_system_data, prep_data, skip_rows = 3)
