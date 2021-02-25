@@ -16,3 +16,5 @@ Boopsie2020 <- map(list.files("data/raw/Boopsie2020", full.names = TRUE), read_e
     ) %>% 
   group_by(Month, Year) %>% 
   summarise(Metric = sum(daily_unique_users), .groups = "drop")
+
+Boopsie <- bind_rows(Boopsie2019, Boopsie2020)
