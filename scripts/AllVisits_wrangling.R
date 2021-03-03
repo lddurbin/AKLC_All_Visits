@@ -52,7 +52,7 @@ source("scripts/AllVisits_SubscriptionDatabases_prep.R")
 # *****************************************************************************
 # Create and save output file ---- 
 
-categories <- read_excel("data/AllVisits_data_sources.xlsx", sheet="Categories", col_types = "text") %>% 
+categories <- read_excel("data/AllVisits_data_sources.xlsx", sheet="Metadata", col_types = "text") %>% 
   clean_names()
 
 # Create one data frame for everything, assign IDs to each service, join with categories, add date, replace NAs with 0, filter out current month
