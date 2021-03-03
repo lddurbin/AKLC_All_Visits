@@ -52,9 +52,6 @@ source("scripts/AllVisits_SubscriptionDatabases_prep.R")
 # *****************************************************************************
 # Create and save output file ---- 
 
-categories <- read_excel("data/AllVisits_data_sources.xlsx", sheet="Metadata", col_types = "text") %>% 
-  clean_names()
-
 # Create one data frame for everything, assign IDs to each service, join with categories, add date, replace NAs with 0, filter out current month
 AllVisits <- bind_rows(
   AandR_enquiries,
@@ -77,7 +74,6 @@ AllVisits <- bind_rows(
   research_outreach,
   Subscriptions,
   .id = "id") %>% 
-  left_join(categories, by = "id") %>% 
   mutate(date = as.Date(paste(Month, "01", Year, sep="/"), format="%b/%d/%Y")) %>% 
   select(-Month, -Year, metric = Metric) %>% 
   complete(fill = list(Metric = 0)) %>% 
