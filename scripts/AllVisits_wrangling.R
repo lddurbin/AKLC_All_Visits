@@ -8,7 +8,7 @@ library("janitor")
 library("lubridate")
 
 # Commonly-used functions
-source("scripts/functions.R")
+# source("scripts/functions.R")
 
 # Refresh local copy of files, archive existing set
 source("scripts/AllVisits_copy_files.R")

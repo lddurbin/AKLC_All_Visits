@@ -1,7 +1,7 @@
 # Clean and summarise the FY2019 Boopsie data
 Boopsie2019 <- read_excel(list.files("data/raw/Boopsie2019", full.names = TRUE)) %>% 
   clean_names() %>% 
-  mutate(Month = getMonth(date), Year = getYear(date)) %>% 
+  mutate(Month = format(date, "%b"), Year = format(date, "%Y")) %>% 
   group_by(Month, Year) %>% 
   summarise(Metric = sum(daily_unique_users), .groups = "drop")
 

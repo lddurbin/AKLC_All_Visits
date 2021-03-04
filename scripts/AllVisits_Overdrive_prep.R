@@ -7,6 +7,6 @@ Overdrive <- excel_sheets(list.files("data/raw/Overdrive", full.names = TRUE)) %
   map(read_excel, path = list.files("data/raw/Overdrive", full.names = TRUE)) %>% 
   bind_rows() %>% 
   clean_names() %>% 
-  mutate(Month = getMonth(date), Year = getYear(date)) %>% 
+  mutate(Month = format(date, "%b"), Year = format(date, "%Y")) %>% 
   group_by(Month, Year) %>% 
   summarise(Metric = sum(active_visits), .groups = "drop")

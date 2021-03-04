@@ -6,7 +6,7 @@ RegionalSocialPrep <- function(x) {
     select(1:Total) %>% 
     pivot_longer(2:(length(.)-1), values_to = "Metric", names_transform = list(name = as.integer)) %>%
     filter(str_detect(...1, metrics) & (!is.na(Metric) & Metric > 0)) %>%
-    mutate(Month = getMonth(excel_numeric_to_date(name)), Year = getYear(excel_numeric_to_date(name))) %>% 
+    mutate(Month = format(excel_numeric_to_date(name), "%b"), Year = format(excel_numeric_to_date(name), "%Y")) %>% 
     select(platform = 1, 4, 5, 6)
 }
 

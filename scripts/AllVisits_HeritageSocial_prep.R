@@ -3,7 +3,7 @@ HeritageSocialPrep <- function(x) {
     remove_empty(which = c("rows", "cols")) %>% 
     select(metric_name = 1, everything(), -length(.)) %>% 
     pivot_longer(-1, names_to = "date", names_transform = list(date = as.integer), values_to = "Metric") %>% 
-    mutate(Month = getMonth(excel_numeric_to_date(date)), Year = getYear(excel_numeric_to_date(date))) %>% 
+    mutate(Month = format(excel_numeric_to_date(date), "%b"), Year = format(excel_numeric_to_date(date), "%Y")) %>% 
     filter(str_detect(metric_name, "Facebook engagement")) %>% 
     select(Month, Year, Metric)
 }
