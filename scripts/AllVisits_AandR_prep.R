@@ -1,7 +1,7 @@
 # Prepare Archives and Records data
 AandR_prep <- function(x) {
   read_excel(list.files(x, full.names = TRUE)) %>% 
-    select(-c(Metric_source, Metric_type)) %>% 
+    select(-c(Metric_source, Metric_type, Data_source)) %>% 
     mutate(across(c(1:2), as.character))
 }
 
