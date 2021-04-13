@@ -11,7 +11,7 @@ library("lubridate")
 # source("scripts/functions.R")
 
 # Refresh local copy of files, archive existing set
-source("scripts/AllVisits_copy_files.R")
+#source("scripts/AllVisits_copy_files.R")
 
 # *****************************************************************************
 

@@ -1,11 +1,11 @@
-metrics <- c("engagement \\(|Sound Cloud podcast listens|YouTube views|page views")
+metrics <- c(" engagement|sound cloud podcast listens|youtube views|page views")
 
 # Prepare regional social data, irrespective of the FY
 RegionalSocialPrep <- function(x) {
   x %>% read_excel(range = cell_cols("A:N")) %>%
     select(1:Total) %>% 
     pivot_longer(2:(length(.)-1), values_to = "Metric", names_transform = list(name = as.integer)) %>%
-    filter(str_detect(...1, metrics) & (!is.na(Metric) & Metric > 0)) %>%
+    filter(str_detect(str_to_lower(...1), metrics) & (!is.na(Metric) & Metric > 0)) %>%
     mutate(Month = format(excel_numeric_to_date(name), "%b"), Year = format(excel_numeric_to_date(name), "%Y")) %>% 
     select(platform = 1, 4, 5, 6)
 }
