@@ -5,7 +5,7 @@ service_assignment <- function(service) {
 }
 
 # Get the DX data
-DX <- read_csv(list.files("data/raw/DX", full.names = TRUE), col_names = T, col_types = "ccccd")
+DX <- read_csv(list.files("data/raw/DX", pattern = "*.csv", full.names = TRUE), col_names = T, col_types = "ccccd")
 
 # Assign each service to its relevant variable
 community_outreach <- service_assignment("Community Libraries' outreach")
